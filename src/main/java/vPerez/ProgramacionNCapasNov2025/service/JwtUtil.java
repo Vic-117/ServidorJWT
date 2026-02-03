@@ -4,6 +4,7 @@
  */
 package vPerez.ProgramacionNCapasNov2025.service;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -11,6 +12,7 @@ import io.jsonwebtoken.security.Keys;
 import java.security.Key;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  *
@@ -31,17 +33,32 @@ public class JwtUtil {
     
     }
     
-    public static String validateToken(String token){
+    public boolean validateToken(String token,UserDetails userDetails){
         try{
-            return Jwts.parserBuilder()
+           String subject = Jwts.parserBuilder()
                     .setSigningKey(SECRET_KEY)
                     .build()
                     .parseClaimsJws(token)
                     .getBody()
                     .getSubject();
+           return subject.equals(userDetails.getUsername());
         }catch(JwtException ex){
-            return null;
+            return false;
         }
     }
+    
+     private Claims extractAllClaims(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(SECRET_KEY)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    
+     public String extractUsername(String token) {
+        return extractAllClaims(token).getSubject();
+    }
+
     
 }

@@ -4,9 +4,12 @@
  */
 package vPerez.ProgramacionNCapasNov2025.service;
 
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import vPerez.ProgramacionNCapasNov2025.DAO.IUsuarioJPA;
+import vPerez.ProgramacionNCapasNov2025.DAO.UsuarioJpaDAOImplementation;
+import vPerez.ProgramacionNCapasNov2025.JPA.Usuario;
 
 /**
  *
@@ -14,17 +17,27 @@ import vPerez.ProgramacionNCapasNov2025.DAO.IUsuarioJPA;
  */
 public class UserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService{
 
-    private IUsuarioJPA usuarioJPA;
+    private UsuarioJpaDAOImplementation usuarioJPA;
     
-    public void UserDetailsService( IUsuarioJPA usuarioJPA){
+    public void UserDetailsService( UsuarioJpaDAOImplementation usuarioJPA){
         this.usuarioJPA = usuarioJPA;
     }
     
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         
+        Usuario usuario = (Usuario)usuarioJPA.getByEmail(username).Object;
         
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        boolean desactivado;
+        desactivado = usuario.getEstatus() == 0 ? true:false;
+        
+        return User.withUsername(usuario.getEmail())
+                .password(usuario.getPassword())
+                .roles(usuario.rol.getNombre())
+                .disabled(desactivado)
+                .build();
+        
+        
     }
     
 }
