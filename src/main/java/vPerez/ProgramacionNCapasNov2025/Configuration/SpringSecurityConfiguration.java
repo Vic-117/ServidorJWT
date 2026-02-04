@@ -8,14 +8,17 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import vPerez.ProgramacionNCapasNov2025.service.JwtFilter;
+import vPerez.ProgramacionNCapasNov2025.Components.JwtFilter;
 
 /**
  *
@@ -23,38 +26,46 @@ import vPerez.ProgramacionNCapasNov2025.service.JwtFilter;
  */
 @Configuration
 @EnableWebSecurity
-public class SpringSecurityConfiguration extends WebSecurityConfiguration {
+public class SpringSecurityConfiguration {
 
-    private UserDetailsService userDetailsService;
+//    private UserDetailsService userDetailsService;
     private JwtFilter jwtFilter;
-    private AuthenticationProvider authenticationProvider;
-////    private CustomFailureHandler customFailureHandler;
-//    private CustomSuccessHandler customSuccessHandler;
+//    private AuthenticationProvider authenticationProvider;
 
-    public SpringSecurityConfiguration(UserDetailsService userDetailsService, JwtFilter jwtFilter) {
-       
-        this.userDetailsService = userDetailsService;
+    public SpringSecurityConfiguration(JwtFilter jwtFilter) {
+
+//        this.userDetailsService = userDetailsService;
         this.jwtFilter = jwtFilter;
     }
-    
-//    @Bean
-//    public AuthenticationManager authenticationManager(){
-//        return su
-//    }
-    
+
     @Bean
-    public SecurityFilterChain  securityFilterChain(HttpSecurity http) throws Exception{
-        http.csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(config -> config.requestMatchers("/login/**").permitAll().anyRequest().authenticated())
-                .addFilterBefore(new JwtFilter(),UsernamePasswordAuthenticationFilter.class)
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(config -> config
+                .requestMatchers("/login").permitAll()
+                .requestMatchers("/Usuario/detail")
+                .hasAnyRole("Usuario")
+                .requestMatchers("/Usuario/**")//Rutas a las que se accede sin contraseña(las rutas despues de la principal)
+                .hasAnyRole("Administrador")
+                .anyRequest().authenticated()
+                )
                 .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-        
-                
+
         return http.build();
-    
+
     }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+//    @Bean
+//    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+//        return authenticationConfiguration.getAuthenticationManager();
+//    }
 
 }

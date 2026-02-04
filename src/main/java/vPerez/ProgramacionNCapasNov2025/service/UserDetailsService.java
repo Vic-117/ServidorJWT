@@ -7,6 +7,7 @@ package vPerez.ProgramacionNCapasNov2025.service;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 import vPerez.ProgramacionNCapasNov2025.DAO.IUsuarioJPA;
 import vPerez.ProgramacionNCapasNov2025.DAO.UsuarioJpaDAOImplementation;
 import vPerez.ProgramacionNCapasNov2025.JPA.Usuario;
@@ -15,6 +16,7 @@ import vPerez.ProgramacionNCapasNov2025.JPA.Usuario;
  *
  * @author digis
  */
+@Service
 public class UserDetailsService implements org.springframework.security.core.userdetails.UserDetailsService{
 
     private UsuarioJpaDAOImplementation usuarioJPA;
