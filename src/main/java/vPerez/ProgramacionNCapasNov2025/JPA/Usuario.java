@@ -35,7 +35,6 @@ public class Usuario {
     @Column(name = "idusuario")
     private int idUsuario;
 
-    
     @Column(name = "username")
     private String nombre;
 
@@ -44,7 +43,7 @@ public class Usuario {
 
     @Column(name = "apellidomaterno")
     private String apellidoMaterno;
-
+    @Column(name = "email")
     private String email;
 
     private String password;

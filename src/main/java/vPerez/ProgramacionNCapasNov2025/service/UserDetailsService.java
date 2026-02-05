@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import vPerez.ProgramacionNCapasNov2025.DAO.IUsuarioJPA;
 import vPerez.ProgramacionNCapasNov2025.DAO.UsuarioJpaDAOImplementation;
+import vPerez.ProgramacionNCapasNov2025.JPA.Result;
 import vPerez.ProgramacionNCapasNov2025.JPA.Usuario;
 
 /**
@@ -21,15 +22,15 @@ public class UserDetailsService implements org.springframework.security.core.use
 
     private UsuarioJpaDAOImplementation usuarioJPA;
     
-    public void UserDetailsService( UsuarioJpaDAOImplementation usuarioJPA){
+    public UserDetailsService( UsuarioJpaDAOImplementation usuarioJPA){
         this.usuarioJPA = usuarioJPA;
     }
     
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         
-        Usuario usuario = (Usuario)usuarioJPA.getByEmail(username).Object;
-        
+        Result result = usuarioJPA.getByEmail(username);
+        Usuario usuario = (Usuario)result.Object;
         boolean desactivado;
         desactivado = usuario.getEstatus() == 0 ? true:false;
         

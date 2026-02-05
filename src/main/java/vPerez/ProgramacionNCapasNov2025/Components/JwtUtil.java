@@ -53,27 +53,7 @@ public class JwtUtil {
                 .getSubject();
                
     }
-//    public boolean validateToken(String token,UserDetails userDetails){
-//        try{
-//           String subject = Jwts.parserBuilder()
-//                    .setSigningKey( getSigningKey())
-//                    .build()
-//                    .parseClaimsJws(token)
-//                    .getBody()
-//                    .getSubject();
-//           return subject.equals(userDetails.getUsername());
-//        }catch(JwtException ex){
-//            return false;
-//        }
-//    }
-//    
-//     private Claims extractAllClaims(String token) {
-//        return Jwts.parserBuilder()
-//                .setSigningKey( getSigningKey())
-//                .build()
-//                .parseClaimsJws(token)
-//                .getBody();
-//    }
+
 
     
 

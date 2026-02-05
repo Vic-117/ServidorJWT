@@ -349,6 +349,7 @@ public class UsuarioJpaDAOImplementation implements IUsuarioJPA {
         try {
 
             TypedQuery<Usuario> consulta = entityManager.createQuery("SELECT u FROM Usuario u WHERE u.email=:email", Usuario.class);
+            consulta.setParameter("email",email);
             result.Object = consulta.getSingleResult();
             if (result.Object != null) {
                 result.StatusCode = 200;

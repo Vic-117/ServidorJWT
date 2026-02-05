@@ -44,10 +44,10 @@ public class SpringSecurityConfiguration {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(config -> config
                 .requestMatchers("/login").permitAll()
-                .requestMatchers("/Usuario/detail")
-                .hasAnyRole("Usuario")
-                .requestMatchers("/Usuario/**")//Rutas a las que se accede sin contraseña(las rutas despues de la principal)
-                .hasAnyRole("Administrador")
+                .requestMatchers("/api/usuarios/detail")
+                .hasAnyAuthority("ROLE_Usuario")
+                .requestMatchers("/api/usuarios/**")//Rutas a las que se accede sin contraseña(las rutas despues de la principal)
+                .hasAnyAuthority("ROLE_Administrador")
                 .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
