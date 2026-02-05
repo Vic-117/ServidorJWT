@@ -39,16 +39,17 @@ public class LoginRestController {
     public ResponseEntity login(@RequestBody Usuario usuario ){
             Result result = new Result();
         try{
-            String jwt = jwtUtil.generateToken(usuario.getEmail());
+            result.Object = jwtUtil.generateToken(usuario.getEmail());
             result.StatusCode = 201;
             result.Correct = true;
-            return ResponseEntity.ok(jwt);
+            return ResponseEntity.status(result.StatusCode).body(result);
         }catch(Exception ex){
             result.StatusCode = 400;
             result.Correct = false;
             result.ex = ex;
             result.ErrorMesagge = ex.getLocalizedMessage();
-            return ResponseEntity.status(result.StatusCode).body("error");
+//            result.Object = "";
+            return ResponseEntity.status(result.StatusCode).body(result);
         }
 //        return null;
     }
