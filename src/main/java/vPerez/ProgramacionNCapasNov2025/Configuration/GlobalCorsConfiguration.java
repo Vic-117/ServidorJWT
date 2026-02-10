@@ -30,8 +30,9 @@ public class GlobalCorsConfiguration {
         corsConfig.addAllowedMethod("PUT");
         corsConfig.addAllowedMethod("DELETE");
         corsConfig.addAllowedMethod("PATCH");
-        
+        corsConfig.addAllowedMethod("OPTIONS");//Peticion que se hace antes del get(hecho con ajax) si no se configura no se puede hacer
         corsConfig.addAllowedHeader("*");
+//        corsConfig.addExposedHeader("Authorization");
         source.registerCorsConfiguration("/**", corsConfig);
         return new CorsFilter(source);
     }

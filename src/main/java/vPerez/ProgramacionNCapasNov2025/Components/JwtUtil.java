@@ -36,7 +36,7 @@ public class JwtUtil {
         return Jwts.builder()
                 .setSubject(email)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis()+360000))
+                .setExpiration(new Date(System.currentTimeMillis()+3600000))
                 .signWith(claveSecreta)
                 .compact();
                 

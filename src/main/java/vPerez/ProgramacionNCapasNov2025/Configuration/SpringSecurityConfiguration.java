@@ -6,6 +6,7 @@ package vPerez.ProgramacionNCapasNov2025.Configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -18,6 +19,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfigurationSource;
 import vPerez.ProgramacionNCapasNov2025.Components.JwtFilter;
 
 /**
@@ -26,6 +28,7 @@ import vPerez.ProgramacionNCapasNov2025.Components.JwtFilter;
  */
 @Configuration
 @EnableWebSecurity
+
 public class SpringSecurityConfiguration {
 
 //    private UserDetailsService userDetailsService;
@@ -40,14 +43,15 @@ public class SpringSecurityConfiguration {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .cors().disable()
+        http.cors(corsCustomizer -> corsCustomizer.disable())
+//                .cors().disable()
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(config -> config
                 .requestMatchers("/login").permitAll()
-                .requestMatchers("/api/usuarios/Usuario/*")
+                 .requestMatchers(HttpMethod.OPTIONS).permitAll()
+                .requestMatchers("/api/usuarios/detalle/*")
                 .hasAnyAuthority("ROLE_Usuario")
-                .requestMatchers("/api/usuarios/**","/api/rol/**")
+                .requestMatchers("/api/usuarios/**","/api/rol/**","/api/colonia/**","/api/municipio/**","/api/estado/**")
                 .hasAnyAuthority("ROLE_Administrador","ROLE_Usuario")
                 .anyRequest().authenticated()
                 )
@@ -64,9 +68,6 @@ public class SpringSecurityConfiguration {
         return new BCryptPasswordEncoder();
     }
 
-//    @Bean
-//    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-//        return authenticationConfiguration.getAuthenticationManager();
-//    }
+
 
 }

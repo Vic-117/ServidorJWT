@@ -90,7 +90,7 @@ public class UsuarioRestController {
         @ApiResponse(responseCode = "400", description = "Algo falló en la petición"),
         @ApiResponse(responseCode = "404", description = "No hay usuarios que mostrar")
     })
-    @GetMapping("/Usuario/{idUsuario}")
+    @GetMapping("/detalle/{idUsuario}")
     public ResponseEntity getById(@PathVariable("idUsuario") int idUsuario) {
         Result result = usuarioJpaDaoImplementation.getDireccionUsuarioById(idUsuario);
 
