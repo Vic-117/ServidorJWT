@@ -277,20 +277,21 @@ public class UsuarioJpaDAOImplementation implements IUsuarioJPA {
             //String builder trabaja sobre la misma cadena, un String normal si se modifica se crea otro con la modificacion en otro espacio de memoria
             StringBuilder query = new StringBuilder("FROM Usuario WHERE UPPER(nombre) LIKE UPPER(:nombre) AND UPPER(apellidoPaterno) LIKE UPPER(:apellidoPaterno) AND UPPER(apellidoMaterno) LIKE UPPER(:apellidoMaterno)");
 
-            TypedQuery<Usuario> queryUsuarios = entityManager.createQuery(query.toString(), Usuario.class);
-
-            queryUsuarios.setParameter("nombre", "%" + usuario.getNombre() + "%");//asignar parametros de entrada
-            queryUsuarios.setParameter("apellidoPaterno", "%" + usuario.getApellidoPaterno() + "%");
-            queryUsuarios.setParameter("apellidoMaterno", "%" + usuario.getApellidoMaterno() + "%");
 
             //si tiene rol la busqueda
             if (usuario.rol.getIdRol() != 0) {
                 query.append(" AND rol.idRol = :idRol");
             }
+            
+            TypedQuery<Usuario> queryUsuarios = entityManager.createQuery(query.toString(), Usuario.class);
 
+            queryUsuarios.setParameter("nombre", "%" + usuario.getNombre() + "%");//asignar parametros de entrada
+            queryUsuarios.setParameter("apellidoPaterno", "%" + usuario.getApellidoPaterno() + "%");
+            queryUsuarios.setParameter("apellidoMaterno", "%" + usuario.getApellidoMaterno() + "%");
             if (usuario.rol.getIdRol() != 0) {
                 queryUsuarios.setParameter("idRol", usuario.rol.getIdRol());
             }
+            
             List<Usuario> usuarios = queryUsuarios.getResultList();
             if (usuarios.isEmpty()) {
                 result.StatusCode = 204;

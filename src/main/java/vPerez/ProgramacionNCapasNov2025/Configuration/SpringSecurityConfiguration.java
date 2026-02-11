@@ -40,34 +40,33 @@ public class SpringSecurityConfiguration {
 //        this.userDetailsService = userDetailsService;
         this.jwtFilter = jwtFilter;
     }
-
+    
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.cors(corsCustomizer -> corsCustomizer.disable())
-//                .cors().disable()
+                //                .cors().disable()
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(config -> config
                 .requestMatchers("/login").permitAll()
-                 .requestMatchers(HttpMethod.OPTIONS).permitAll()
-                .requestMatchers("/api/usuarios/detalle/*")
-                .hasAnyAuthority("ROLE_Usuario")
-                .requestMatchers("/api/usuarios/**","/api/rol/**","/api/colonia/**","/api/municipio/**","/api/estado/**")
-                .hasAnyAuthority("ROLE_Administrador","ROLE_Usuario")
+                .requestMatchers(HttpMethod.OPTIONS).permitAll()
+                .requestMatchers("/api/usuarios/*")
+                .hasAnyAuthority("ROLE_Usuario","ROLE_Administrador")
+//                .requestMatchers("/api/usuarios/busqueda").hasAnyAuthority("ROLE_Administrador")
+                .requestMatchers("/api/usuarios/detalle/**","/api/rol/**", "/api/colonia/**", "/api/municipio/**", "/api/estado/**")
+                .hasAnyAuthority("ROLE_Administrador", "ROLE_Usuario")
                 .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-
+        
         return http.build();
-
+        
     }
-
+    
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-
-
+    
 }
