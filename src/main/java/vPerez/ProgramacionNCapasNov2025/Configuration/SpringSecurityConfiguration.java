@@ -58,7 +58,7 @@ public class SpringSecurityConfiguration {
                 )
                 .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);//añade filtro para autorizacion antes de ejecutar(Token Json)
         
         return http.build();
         

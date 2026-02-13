@@ -12,6 +12,8 @@ import java.util.stream.Collectors;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import vPerez.ProgramacionNCapasNov2025.JPA.Direccion;
@@ -27,6 +29,9 @@ public class UsuarioJpaDAOImplementation implements IUsuarioJPA {
 
     @Autowired
     private EntityManager entityManager;
+    @Lazy
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public Result getAll() {
@@ -60,7 +65,7 @@ public class UsuarioJpaDAOImplementation implements IUsuarioJPA {
         Result result = new Result();
         try {
             if (usuario != null) {
-
+                usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
                 entityManager.persist(usuario);//Para que genere el id
 
                 usuario.direcciones.get(0).Usuario = new Usuario();
